@@ -5,13 +5,17 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+
+	"github.com/riqueemn/video-maker-go/entities"
+	"github.com/riqueemn/video-maker-go/robots"
 )
 
-type Content struct {
-	searchTerm string
-	//prefixNumber     int
-	prefixName string
-}
+const ()
+
+var (
+	content   entities.Content
+	robotText robots.Text
+)
 
 func askAndReturnSearchTerm() string {
 	fmt.Print("\nType a Wikipedia shearch Term: ")
@@ -33,8 +37,8 @@ func askAndReturnSearchTerm() string {
 }
 
 func askAndReturnPrefix() string {
-	prefixes := []string{"Who is", "What is", "The history of"}
-	//const prefixes = ["Quem é", "O que é", "A história de"]
+	prefixes := []string{"Who is", "What is", "The history of", "Cancel"}
+	//const prefixes = ["Quem é", "O que é", "A história de", "Cancelar"]
 
 	//reader := bufio.NewReader(os.Stdin)
 	//text, _ := reader.ReadString('\n')
@@ -44,7 +48,13 @@ func askAndReturnPrefix() string {
 	//n, _ := strconv.Atoi(text)
 
 	for i, prefixe := range prefixes {
-		fmt.Print("\n[", i+1, "] ", prefixe)
+		if i != len(prefixes)-1 {
+			fmt.Print("\n[", i+1, "] ", prefixe)
+
+			continue
+		}
+		fmt.Print("\n[", 0, "] ", prefixe)
+
 	}
 	fmt.Print("\n\n")
 
@@ -53,25 +63,38 @@ func askAndReturnPrefix() string {
 
 	for scanner.Scan() {
 		text = scanner.Text()
-		n, _ := strconv.Atoi(text)
-		n--
-		if n != 1 && n != 2 && n != 3 {
+		if text != "1" && text != "2" && text != "3" && text != "0" {
 			fmt.Println("Valor indevido!!!")
 			os.Exit(1)
-		}
+		} else {
+			if text == "0" {
+				os.Exit(1)
+			}
 
-		return prefixes[n-1]
+			n, _ := strconv.Atoi(text)
+
+			return prefixes[n-1]
+		}
 	}
 
 	return ""
 }
 
 func main() {
-	var content Content
 
-	content.searchTerm = askAndReturnSearchTerm()
-	content.prefixName = askAndReturnPrefix()
+	content.SearchTerm = askAndReturnSearchTerm()
+	content.PrefixName = askAndReturnPrefix()
 
-	fmt.Print("\n\n", content)
+	robotText.RobotProcess(&content)
 
+	print(content)
+
+}
+
+func print(content entities.Content) {
+	fmt.Println(content)
+	for _, line := range content.Sentences {
+
+		fmt.Println(line)
+	}
 }
