@@ -3,14 +3,12 @@ package main
 import (
 	"fmt"
 
-	"github.com/riqueemn/video-maker-go/entities"
 	"github.com/riqueemn/video-maker-go/robots"
 )
 
 const ()
 
 var (
-	//content    entities.Content
 	robotCredential robots.Credential
 	robotState      robots.State
 	robotInput      robots.Input
@@ -24,14 +22,14 @@ func main() {
 	robotText.RobotProcess()
 	robotImage.RobotProcess()
 
-	content := robotState.Load()
-
-	fmt.Print("\n")
-	print(content)
+	print()
 
 }
 
-func print(content entities.Content) {
+func print() {
+	content := robotState.Load()
+
+	fmt.Print("\n")
 	//fmt.Println(content)
 	for _, line := range content.Sentences {
 
