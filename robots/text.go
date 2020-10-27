@@ -1,10 +1,7 @@
 package robots
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"log"
 	"regexp"
 	"strings"
 	"sync"
@@ -17,25 +14,6 @@ import (
 	"gopkg.in/neurosnap/sentences.v1/english"
 )
 
-var (
-	apis api
-)
-
-// api -> struct das apis
-type api struct {
-	APIKeyAlgorithmia string `json:"apiKeyAlgorithmia"`
-	APIKeyWatson      string `json:"apiKeyWatson"`
-}
-
-func init() {
-	file, err := ioutil.ReadFile("")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	json.Unmarshal(file, &apis)
-
-}
 
 //Text -> struct do robô de texto
 type Text struct {
@@ -63,7 +41,7 @@ func myFunc(waitGroup *sync.WaitGroup) {
 
 func fetchContentFromWikipedia(content *entities.Content) {
 
-	var client = algorithmia.NewClient(apis.APIKeyAlgorithmia, "")
+	var client = algorithmia.NewClient(secrets.APIKeyAlgorithmia, "")
 
 
 	algo, _ := client.Algo("web/WikipediaParser/0.1.2?timeout=300")
@@ -151,7 +129,7 @@ func fetchKeywordsOfAllSentences(content *entities.Content) {
 
 func fetchWatsonAndReturnKeyWords(sentence string) []string {
 	authenticator := &core.IamAuthenticator{
-		ApiKey: apis.APIKeyWatson,
+		ApiKey: secrets.APIKeyWatson,
 	}
 	service, serviceErr := nlu.
 		NewNaturalLanguageUnderstandingV1(&nlu.NaturalLanguageUnderstandingV1Options{
