@@ -28,7 +28,7 @@ type api struct {
 }
 
 func init() {
-	file, err := ioutil.ReadFile("C:/Users/Henrique/go/src/github.com/riqueemn/video-maker-go/apiKeys.json")
+	file, err := ioutil.ReadFile("github.com/riqueemn/video-maker-go/state.json")
 	if err != nil {
 		log.Fatal(err)
 	}
