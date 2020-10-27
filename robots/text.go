@@ -1,17 +1,39 @@
 package robots
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/IBM/go-sdk-core/core"
 	"github.com/algorithmiaio/algorithmia-go"
 	"github.com/riqueemn/video-maker-go/entities"
+	nlu "github.com/watson-developer-cloud/go-sdk/naturallanguageunderstandingv1"
 	"gopkg.in/neurosnap/sentences.v1/english"
 )
 
-var ()
+var (
+	apis api
+)
+
+type api struct {
+	ApiKeyAlgorithmia string `json:"apiKeyAlgorithmia"`
+	ApiKeyWatson      string `json:"apiKeyWatson"`
+}
+
+func init() {
+	file, err := ioutil.ReadFile("C:/Users/Henrique/go/src/github.com/riqueemn/video-maker-go/apiKeys.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	json.Unmarshal(file, &apis)
+
+}
 
 //Text -> struct do robô de texto
 type Text struct {
@@ -23,6 +45,8 @@ func (t *Text) RobotProcess(content *entities.Content) {
 	fetchContentFromWikipedia(content)
 	sanitizeContent(content)
 	breakContentIntoSentences(content)
+	limitMaximumSentences(content)
+	fetchKeywordsOfAllSentences(content)
 	//fmt.Println(content)
 
 }
@@ -35,7 +59,8 @@ func myFunc(waitGroup *sync.WaitGroup) {
 
 func fetchContentFromWikipedia(content *entities.Content) {
 
-	var client = algorithmia.NewClient("", "")
+	var client = algorithmia.NewClient(apis.ApiKeyAlgorithmia, "")
+
 
 	algo, _ := client.Algo("web/WikipediaParser/0.1.2?timeout=300")
 	resp, _ := algo.Pipe(content.SearchTerm)
@@ -110,6 +135,51 @@ func breakContentIntoSentences(content *entities.Content) {
 		content.Sentences[i].Keywords = nil
 		content.Sentences[i].Images = nil
 	}
+}
+
+func limitMaximumSentences(content *entities.Content) {
+	content.Sentences = content.Sentences[0:7]
+}
+
+func fetchKeywordsOfAllSentences(content *entities.Content) {
+	for i, sentence := range content.Sentences {
+		content.Sentences[i].Keywords = fetchWatsonAndReturnKeyWords(sentence.Text)
+	}
+}
+
+func fetchWatsonAndReturnKeyWords(sentence string) []string {
+	authenticator := &core.IamAuthenticator{
+		ApiKey: apis.ApiKeyWatson,
+	}
+	service, serviceErr := nlu.
+		NewNaturalLanguageUnderstandingV1(&nlu.NaturalLanguageUnderstandingV1Options{
+			URL:           "https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/f6c18e3b-0719-4eec-a61f-ae11232a0e4a",
+			Version:       "2017-02-27",
+			Authenticator: authenticator,
+		})
+
+	if serviceErr != nil {
+		panic(serviceErr)
+	}
+
+	analyzeOptions := service.NewAnalyzeOptions(&nlu.Features{
+		Keywords: &nlu.KeywordsOptions{},
+	}).SetText(sentence)
+
+	analyzeResult, _, responseErr := service.Analyze(analyzeOptions)
+
+	if responseErr != nil {
+		panic(responseErr)
+	}
+
+	var keywords []string
+	if analyzeResult != nil {
+		for _, keyword := range analyzeResult.Keywords {
+			keywords = append(keywords, *keyword.Text)
+		}
+	}
+	fmt.Println(keywords)
+	return keywords
 }
 
 func print(text []string) {

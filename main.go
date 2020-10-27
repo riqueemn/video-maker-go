@@ -87,12 +87,13 @@ func main() {
 
 	robotText.RobotProcess(&content)
 
+	fmt.Print("\n")
 	print(content)
 
 }
 
 func print(content entities.Content) {
-	fmt.Println(content)
+	//fmt.Println(content)
 	for _, line := range content.Sentences {
 
 		fmt.Println(line)
