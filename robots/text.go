@@ -28,7 +28,9 @@ type api struct {
 }
 
 func init() {
+
 	file, err := ioutil.ReadFile("")
+
 	if err != nil {
 		log.Fatal(err)
 	}
