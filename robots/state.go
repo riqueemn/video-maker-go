@@ -17,7 +17,10 @@ func (s *State) Save(content entities.Content) {
 	if jsonErr != nil {
 		log.Fatal(jsonErr)
 	}
+
 	err := ioutil.WriteFile(secrets.Dir, b, 0644)
+
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -26,7 +29,9 @@ func (s *State) Save(content entities.Content) {
 //Load -> Carrega o Content
 func (s *State) Load() entities.Content {
 	var contentJSON entities.Content
+
 	file, err := ioutil.ReadFile(secrets.Dir)
+
 	if err != nil {
 		log.Fatal(err)
 	}
