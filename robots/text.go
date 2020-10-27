@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"regexp"
 	"strings"
 	"sync"
 	"time"
@@ -20,6 +21,7 @@ var (
 	apis api
 )
 
+// api -> struct das apis
 type api struct {
 	ApiKeyAlgorithmia string `json:"apiKeyAlgorithmia"`
 	ApiKeyWatson      string `json:"apiKeyWatson"`
@@ -75,9 +77,9 @@ func fetchContentFromWikipedia(content *entities.Content) {
 func sanitizeContent(content *entities.Content) {
 	withoutBlankLines := removeBlankLines(content.SourceContentOriginal)
 	withoutMarkdown := removeMarkdown(withoutBlankLines)
-	//withoutDatesInParenteses := removeDatesInParenteses(withoutMarkdown)
+	withoutDatesInParenteses := removeDatesInParenteses(withoutMarkdown)
 	//fmt.Println(withoutMarkdown)
-	content.SourceContentSanitized = withoutMarkdown
+	content.SourceContentSanitized = withoutDatesInParenteses
 	//fmt.Println(len(withoutMarkdown))
 
 }
@@ -106,21 +108,19 @@ func removeMarkdown(withoutBlankLines []string) string {
 	return strings.Join(withoutMarkdown, " ")
 }
 
-/*
-func removeDatesInParenteses(withoutMarkdown []string) []string {
+func removeDatesInParenteses(withoutMarkdown string) string {
+	var withoutDatesInParenteses string
 
-	var withoutDatesInParenteses []string
+	re := regexp.MustCompile(`[(]+[0-9A-Za-z,–\-./\t ]+[)]`)
+	newLine := re.ReplaceAll([]byte(withoutMarkdown), []byte(""))
 
-	for _, line := range withoutMarkdown {
+	re = regexp.MustCompile(`[\t ]+[\t ]`)
+	newLine = re.ReplaceAll([]byte(newLine), []byte(" "))
 
-		newLine := strings.Replace(line, \(\d\d\d\d-\d\d\d\d)/, " ", -1)
-
-		withoutDatesInParenteses = append(withoutDatesInParenteses, newLine)
-	}
+	withoutDatesInParenteses = string(newLine)
 
 	return withoutDatesInParenteses
 }
-*/
 
 func breakContentIntoSentences(content *entities.Content) {
 	tokenizer, err := english.NewSentenceTokenizer(nil)
