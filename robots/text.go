@@ -61,6 +61,7 @@ func fetchContentFromWikipedia(content *entities.Content) {
 
 	var client = algorithmia.NewClient(apis.ApiKeyAlgorithmia, "")
 
+
 	algo, _ := client.Algo("web/WikipediaParser/0.1.2?timeout=300")
 	resp, _ := algo.Pipe(content.SearchTerm)
 	response, _ := resp.(*algorithmia.AlgoResponse)
