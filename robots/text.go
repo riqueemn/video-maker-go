@@ -18,22 +18,23 @@ import (
 )
 
 var (
-	apis api
+	secrets secret
 )
 
-// api -> struct das apis
-type api struct {
+// secret -> struct das apis
+type secret struct {
 	APIKeyAlgorithmia string `json:"apiKeyAlgorithmia"`
 	APIKeyWatson      string `json:"apiKeyWatson"`
+	Dir               string `json:"dir"`
 }
 
 func init() {
-	file, err := ioutil.ReadFile("C:/Users/Henrique/go/src/github.com/riqueemn/video-maker-go/apiKeys.json")
+	file, err := ioutil.ReadFile("")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	json.Unmarshal(file, &apis)
+	json.Unmarshal(file, &secrets)
 
 }
 
@@ -63,7 +64,7 @@ func myFunc(waitGroup *sync.WaitGroup) {
 
 func fetchContentFromWikipedia(content *entities.Content) {
 
-	var client = algorithmia.NewClient(apis.APIKeyAlgorithmia, "")
+	var client = algorithmia.NewClient(secrets.APIKeyAlgorithmia, "")
 
 	algo, _ := client.Algo("web/WikipediaParser/0.1.2?timeout=300")
 	resp, _ := algo.Pipe(content.SearchTerm)
@@ -150,7 +151,7 @@ func fetchKeywordsOfAllSentences(content *entities.Content) {
 
 func fetchWatsonAndReturnKeyWords(sentence string) []string {
 	authenticator := &core.IamAuthenticator{
-		ApiKey: apis.APIKeyWatson,
+		ApiKey: secrets.APIKeyWatson,
 	}
 	service, serviceErr := nlu.
 		NewNaturalLanguageUnderstandingV1(&nlu.NaturalLanguageUnderstandingV1Options{
