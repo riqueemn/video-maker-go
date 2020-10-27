@@ -23,8 +23,8 @@ var (
 
 // api -> struct das apis
 type api struct {
-	ApiKeyAlgorithmia string `json:"apiKeyAlgorithmia"`
-	ApiKeyWatson      string `json:"apiKeyWatson"`
+	APIKeyAlgorithmia string `json:"apiKeyAlgorithmia"`
+	APIKeyWatson      string `json:"apiKeyWatson"`
 }
 
 func init() {
@@ -42,14 +42,16 @@ type Text struct {
 }
 
 //RobotProcess -> Sequência de processos do Robô
-func (t *Text) RobotProcess(content *entities.Content) {
+func (t *Text) RobotProcess() {
+	var content = robotState.Load()
 
-	fetchContentFromWikipedia(content)
-	sanitizeContent(content)
-	breakContentIntoSentences(content)
-	limitMaximumSentences(content)
-	fetchKeywordsOfAllSentences(content)
-	//fmt.Println(content)
+	fetchContentFromWikipedia(&content)
+	sanitizeContent(&content)
+	breakContentIntoSentences(&content)
+	limitMaximumSentences(&content)
+	fetchKeywordsOfAllSentences(&content)
+
+	robotState.Save(content)
 
 }
 
@@ -61,7 +63,7 @@ func myFunc(waitGroup *sync.WaitGroup) {
 
 func fetchContentFromWikipedia(content *entities.Content) {
 
-	var client = algorithmia.NewClient(apis.ApiKeyAlgorithmia, "")
+	var client = algorithmia.NewClient(apis.APIKeyAlgorithmia, "")
 
 
 	algo, _ := client.Algo("web/WikipediaParser/0.1.2?timeout=300")
@@ -149,7 +151,7 @@ func fetchKeywordsOfAllSentences(content *entities.Content) {
 
 func fetchWatsonAndReturnKeyWords(sentence string) []string {
 	authenticator := &core.IamAuthenticator{
-		ApiKey: apis.ApiKeyWatson,
+		ApiKey: apis.APIKeyWatson,
 	}
 	service, serviceErr := nlu.
 		NewNaturalLanguageUnderstandingV1(&nlu.NaturalLanguageUnderstandingV1Options{
@@ -178,7 +180,6 @@ func fetchWatsonAndReturnKeyWords(sentence string) []string {
 			keywords = append(keywords, *keyword.Text)
 		}
 	}
-	fmt.Println(keywords)
 	return keywords
 }
 
