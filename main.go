@@ -11,14 +11,18 @@ const ()
 
 var (
 	//content    entities.Content
-	robotState robots.State
-	robotInput robots.Input
-	robotText  robots.Text
+	robotCredential robots.Credential
+	robotState      robots.State
+	robotInput      robots.Input
+	robotText       robots.Text
+	robotImage      robots.Image
 )
 
 func main() {
+	robotCredential.RobotProcess()
 	robotInput.RobotProcess()
 	robotText.RobotProcess()
+	robotImage.RobotProcess()
 
 	content := robotState.Load()
 

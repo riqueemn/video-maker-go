@@ -14,5 +14,6 @@ require (
 	github.com/stretchr/testify v1.4.0
 	github.com/watson-developer-cloud/go-sdk v1.7.0
 	go.mongodb.org/mongo-driver v1.1.3 // indirect
+	google.golang.org/api v0.34.0
 	gopkg.in/neurosnap/sentences.v1 v1.0.6
 )

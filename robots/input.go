@@ -2,10 +2,7 @@ package robots
 
 import (
 	"bufio"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"log"
 	"os"
 	"strconv"
 
@@ -15,16 +12,6 @@ import (
 var (
 	robotState State
 )
-
-func init() {
-	file, err := ioutil.ReadFile("")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	json.Unmarshal(file, &secrets)
-
-}
 
 //Input -> struct do Input dos dados
 type Input struct{}

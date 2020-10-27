@@ -14,17 +14,6 @@ import (
 	"gopkg.in/neurosnap/sentences.v1/english"
 )
 
-var (
-	secrets secret
-)
-
-// secret -> struct das apis
-type secret struct {
-	APIKeyAlgorithmia string `json:"apiKeyAlgorithmia"`
-	APIKeyWatson      string `json:"apiKeyWatson"`
-	Dir               string `json:"dir"`
-}
-
 //Text -> struct do robô de texto
 type Text struct {
 }
