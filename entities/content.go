@@ -7,4 +7,5 @@ type Content struct {
 	SourceContentOriginal  string     `json:"SourceContentOriginal"`
 	SourceContentSanitized string     `json:"SourceContentSanitized"`
 	Sentences              []Sentence `json:"Sentences"`
+	DownloadedImages       []string   `json:"DownloadedImages"`
 }
