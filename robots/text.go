@@ -1,10 +1,7 @@
 package robots
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"log"
 	"regexp"
 	"strings"
 	"sync"
@@ -26,16 +23,6 @@ type secret struct {
 	APIKeyAlgorithmia string `json:"apiKeyAlgorithmia"`
 	APIKeyWatson      string `json:"apiKeyWatson"`
 	Dir               string `json:"dir"`
-}
-
-func init() {
-	file, err := ioutil.ReadFile("")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	json.Unmarshal(file, &secrets)
-
 }
 
 //Text -> struct do robô de texto
