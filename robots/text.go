@@ -14,6 +14,7 @@ import (
 	"gopkg.in/neurosnap/sentences.v1/english"
 )
 
+
 //Text -> struct do robô de texto
 type Text struct {
 }
@@ -41,6 +42,7 @@ func myFunc(waitGroup *sync.WaitGroup) {
 func fetchContentFromWikipedia(content *entities.Content) {
 
 	var client = algorithmia.NewClient(secrets.APIKeyAlgorithmia, "")
+
 
 	algo, _ := client.Algo("web/WikipediaParser/0.1.2?timeout=300")
 	resp, _ := algo.Pipe(content.SearchTerm)
