@@ -18,11 +18,11 @@ var (
 
 func main() {
 	robotCredential.RobotProcess()
-	robotInput.RobotProcess()
-	robotText.RobotProcess()
+	//robotInput.RobotProcess()
+	//robotText.RobotProcess()
 	robotImage.RobotProcess()
 
-	print()
+	//print()
 
 }
 
