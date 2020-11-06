@@ -14,13 +14,15 @@ var (
 	robotInput      robots.Input
 	robotText       robots.Text
 	robotImage      robots.Image
+	robotVideo      robots.Video
 )
 
 func main() {
 	robotCredential.RobotProcess()
-	//robotInput.RobotProcess()
-	//robotText.RobotProcess()
+	robotInput.RobotProcess()
+	robotText.RobotProcess()
 	robotImage.RobotProcess()
+	robotVideo.RobotProcess()
 
 	//print()
 
