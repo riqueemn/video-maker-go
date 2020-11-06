@@ -2,10 +2,10 @@ package entities
 
 //Content -> Conteúdo da pesquisa
 type Content struct {
-	SearchTerm             string     `json:"SearchTerm"`
-	PrefixName             string     `json:"PrefixName"`
-	SourceContentOriginal  string     `json:"SourceContentOriginal"`
-	SourceContentSanitized string     `json:"SourceContentSanitized"`
-	Sentences              []Sentence `json:"Sentences"`
-	DownloadedImages       []string   `json:"DownloadedImages"`
+	SearchTerm             string     `json:"searchTerm"`
+	PrefixName             string     `json:"prefixName"`
+	SourceContentOriginal  string     `json:"sourceContentOriginal"`
+	SourceContentSanitized string     `json:"sourceContentSanitized"`
+	Sentences              []Sentence `json:"sentences"`
+	DownloadedImages       []string   `json:"downloadedImages"`
 }

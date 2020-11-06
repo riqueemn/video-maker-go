@@ -17,6 +17,7 @@ type Credential struct {
 	Dir                string `json:"dir"`
 	APIKeyGoogleCloud  string `json:"apiKeyGoogleCloud"`
 	APIKeyGoogleSearch string `json:"apiKeyGoogleSearch"`
+	ScriptFilePath     string `json:"scriptFilePath"`
 }
 
 //RobotProcess -> Sequência de processos do Robô
